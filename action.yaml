@@ -64,7 +64,7 @@ runs:
 
         #json payload for argocd rest api
         
-        PAYLOAD=$(cat << 'EOF'
+        cat << EOF > .tmp
         {
           "metadata": {
             "name": "$APPLICATION",
@@ -84,7 +84,7 @@ runs:
           }
         }
         EOF
-        )
+        PAYLOAD=$(cat .tmp)
 
           # Create the ArgoCD application
           SESSION_TOKEN=$(cat .token)
