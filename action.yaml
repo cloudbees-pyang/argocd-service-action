@@ -62,7 +62,7 @@ runs:
         #json payload for argocd rest api
         
         
-        PAYLOAD=$(cat <<EOF
+        PAYLOAD=$(cat << 'EOF'
         {
           "metadata": {
             "name": "$APPLICATION",
