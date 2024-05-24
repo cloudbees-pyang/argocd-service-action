@@ -61,6 +61,7 @@ runs:
         NAMESPACE="${{ inputs.destnamespace }}"
         PROJECT="${{ inputs.projectname }}"
 
+        echo $APPLICATION
         #json payload for argocd rest api
         
         
