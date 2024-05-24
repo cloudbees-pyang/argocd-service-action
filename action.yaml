@@ -64,8 +64,8 @@ runs:
 
         #json payload for argocd rest api
         
-        cat << EOF > .tmp
-        {
+        
+        export  PAYLOAD='{
           "metadata": {
             "name": "$APPLICATION",
             "namespace": "argocd"
@@ -82,9 +82,9 @@ runs:
             },
             "project": "$PROJECT"
           }
-        }
-        EOF
-        PAYLOAD=$(cat .tmp)
+        }' 
+        
+        
 
           # Create the ArgoCD application
           SESSION_TOKEN=$(cat .token)
