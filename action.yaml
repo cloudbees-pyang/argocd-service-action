@@ -44,7 +44,7 @@ runs:
       name: login to argocd
       uses: docker://poseidon1979/curl-jq:1.0
       run: | 
-        SESSION_TOKEN=$(curl -d "{\"username\": \"${{ inputs.user }}\", \"password\": \"${{ inputs.password }}\"}" -H "Content-Type: application/json" "http://34.110.153.253/api/v1/session" | jq -r .token)           
+        SESSION_TOKEN=$(curl -d "{\"username\": \"${{ inputs.username }}\", \"password\": \"${{ inputs.password }}\"}" -H "Content-Type: application/json" "http://34.110.153.253/api/v1/session" | jq -r .token)           
         echo $SESSION_TOKEN >> .token
       
     - id: create-app
