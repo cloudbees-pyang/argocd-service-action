@@ -45,8 +45,7 @@ runs:
       uses: docker://poseidon1979/curl-jq:1.0
       run: | 
         SESSION_TOKEN=$(curl -d "{\"username\": \"${{ inputs.username }}\", \"password\": \"${{ inputs.password }}\"}" -H "Content-Type: application/json" "http://34.110.153.253/api/v1/session" | jq -r .token)           
-        echo $SESSION_TOKEN >> ./token
-        cat ./token
+        echo $SESSION_TOKEN >> token
       
     - id: create-app
       name: create application
@@ -63,7 +62,7 @@ runs:
         #json payload for argocd rest api
         
         
-        PAYLOAD=$(cat << 'EOF'
+        PAYLOAD=$(cat <<EOF
         {
           "metadata": {
             "name": "$APPLICATION",
@@ -84,7 +83,8 @@ runs:
         }
         EOF
         ) 
-          
+          echo $PAYLOAD
+          SESSION_TOKEN=$(cat token)
           curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "${{ inputs.serverurl }}/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN"
           cat response.txt
           
