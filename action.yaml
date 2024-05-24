@@ -62,27 +62,25 @@ runs:
         #json payload for argocd rest api
         
         
-        PAYLOAD=$(cat << 'EOF'
-        {
-          "metadata": {
-            "name": "$APPLICATION",
-            "namespace": "argocd"
+        export  PAYLOAD="{
+          \"metadata\": {
+            \"name\": \"$APPLICATION\",
+            \"namespace\": \"argocd\"
           },
-          "spec": {
-            "source": {
-              "repoURL": "$REPOURL",
-              "path": "$REPO_PATH",
-              "targetRevision": "$REVISION"
+          \"spec\": {
+            \"source\": {
+              \"repoURL\": \"$REPOURL\",
+              \"path\": \"$REPO_PATH\",
+              \"targetRevision\": \"$REVISION\"
             },
-            "destination": {
-              "server": "$SERVER",
-              "namespace": "$NAMESPACE"
+            \"destination\": {
+              \"server\": \"$SERVER\",
+              \"namespace\": \"$NAMESPACE\"
             },
-            "project": "$PROJECT"
+            \"project\": \"$PROJECT\"
           }
-        }
-        EOF
-        ) 
+        }" 
+        
           echo $PAYLOAD
           SESSION_TOKEN=$(cat token)
           echo $SESSION_TOKEN
