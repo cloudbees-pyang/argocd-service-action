@@ -53,13 +53,13 @@ runs:
       uses: docker://poseidon1979/curl-jq:1.0
       run: |
         
-        APPLICATION=${{ inputs.applicationname }}
-        REPOURL=${{ inputs.repourl }}
-        PATH=${{ inputs.repopath }}
-        REVISION=${{ inputs.targetrevision }}
-        SERVER=${{ inputs.serverurl }}
-        NAMESPACE=${{ inputs.destnamespace }}
-        PROJECT=${{ inputs.projectname }}
+        APPLICATION="${{inputs.applicationname}}"
+        REPOURL="${{inputs.repourl}}"
+        PATH="${{inputs.repopath}}"
+        REVISION="${{inputs.targetrevision}}"
+        SERVER="${{inputs.serverurl}}"
+        NAMESPACE="${{inputs.destnamespace}}"
+        PROJECT="${{inputs.projectname}}"
 
         #json payload for argocd rest api
         
