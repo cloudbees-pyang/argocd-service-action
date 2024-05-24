@@ -46,7 +46,7 @@ runs:
       run: | 
         SESSION_TOKEN=$(curl -d "{\"username\": \"${{ inputs.username }}\", \"password\": \"${{ inputs.password }}\"}" -H "Content-Type: application/json" "http://34.110.153.253/api/v1/session" | jq -r .token)           
         echo $SESSION_TOKEN >> .token
-        SESSION_TOKEN=$(cat .token)
+        cat .token
       
     - id: create-app
       name: create application
@@ -90,11 +90,6 @@ runs:
           SESSION_TOKEN=$(<.token)
           echo $SESSION_TOKEN
           
-          response=$(curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "${{ inputs.serverurl }}/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN")
+          curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "${{ inputs.serverurl }}/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN"
           cat response.txt
-          if [[ $response -eq 200 ]]; then
-            echo "complete"
-            
-          else
-            echo "Error: Unexpected HTTP status code $response."
-          fi
+          
