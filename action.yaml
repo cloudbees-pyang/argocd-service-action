@@ -53,23 +53,32 @@ runs:
       run: |
 
         #json payload for argocd rest api
+        
+        APPLICATION=${{ inputs.applicationname }}
+        REPOURL=${{ inputs.repourl }}
+        PATH=${{ inputs.repopath }}
+        REVISION=${{ inputs.targetrevision }}
+        SERVER=${{ inputs.serverurl }}
+        NAMESPACE=${{ inputs.destnamespace }}
+        PROJECT=${{ inputs.projectname }}
+        
         PAYLOAD=$(cat <<EOF
         {
           "metadata": {
-            "name": "${{ inputs.applicationname }}",
+            "name": "$APPLICATION",
             "namespace": "argocd"
           },
           "spec": {
             "source": {
-              "repoURL": "${{ inputs.repourl }}",
-              "path": "${{ inputs.repopath }}",
-              "targetRevision": "${{ inputs.targetrevision }}"
+              "repoURL": "$REPOURL",
+              "path": "$PATH",
+              "targetRevision": "$REVISION"
             },
             "destination": {
-              "server": "${{ inputs.serverurl }}",
-              "namespace": "${{ inputs.destnamespace }}"
+              "server": "$SERVER",
+              "namespace": "$NAMESPACE"
             },
-            "project": "${{ inputs.projectname }}"
+            "project": "$PROJECT"
           }
         }
         EOF
