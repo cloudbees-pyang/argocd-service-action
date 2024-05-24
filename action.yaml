@@ -77,6 +77,8 @@ runs:
 
           # Create the ArgoCD application
           SESSION_TOKEN=$(cat .token)
+          echo $SESSION_TOKEN
+          echo $PAYLOAD
           response=$(curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "${{ inputs.serverurl }}/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN")
           cat response.txt
           if [[ $response -eq 200 ]]; then
