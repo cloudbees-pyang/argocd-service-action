@@ -69,7 +69,7 @@ runs:
               "server": "${{ inputs.serverurl }}",
               "namespace": "${{ inputs.destnamespace }}"
             },
-            "project": "${{ inputs.destnamespace }}"
+            "project": "${{ inputs.projectname }}"
           }
         }
         EOF
