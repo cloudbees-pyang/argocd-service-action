@@ -56,8 +56,8 @@ runs:
         PAYLOAD=$(cat <<EOF
         {
           "metadata": {
-            "name": "${{ inputs.applicationname }}"
-          
+            "name": "${{ inputs.applicationname }}",
+            "namespace": "argocd"
           },
           "spec": {
             "source": {
