@@ -45,16 +45,21 @@ runs:
       uses: docker://poseidon1979/curl-jq:1.0
       run: | 
         SESSION_TOKEN=$(curl -d "{\"username\": \"${{ inputs.username }}\", \"password\": \"${{ inputs.password }}\"}" -H "Content-Type: application/json" "http://34.110.153.253/api/v1/session" | jq -r .token)           
-        
+        echo $SESSION_TOKEN >> ./token
+        cat ./token
+      
+    - id: create-app
+      name: create application
+      uses: docker://curlimages/curl:latest
+      run: |  
         APPLICATION="${{ inputs.applicationname }}"
         REPOURL="${{ inputs.repourl }}"
-        PATH="${{ inputs.repopath }}"
+        REPO_PATH="${{ inputs.repopath }}"
         REVISION="${{ inputs.targetrevision }}"
         SERVER="${{ inputs.serverurl }}"
         NAMESPACE="${{ inputs.destnamespace }}"
         PROJECT="${{ inputs.projectname }}"
 
-        echo $APPLICATION
         #json payload for argocd rest api
         
         
@@ -66,7 +71,7 @@ runs:
           \"spec\": {
             \"source\": {
               \"repoURL\": \"$REPOURL\",
-              \"path\": \"$PATH\",
+              \"path\": \"$REPO_PATH\",
               \"targetRevision\": \"$REVISION\"
             },
             \"destination\": {
@@ -76,9 +81,6 @@ runs:
             \"project\": \"$PROJECT\"
           }
         }" 
-        
-        
-          echo $PAYLOAD
           
           curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "${{ inputs.serverurl }}/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN"
           cat response.txt
