@@ -52,7 +52,7 @@ runs:
       uses: docker://poseidon1979/curl-jq:1.0
       run: |
 
-        #json payload for argocd rest api
+        #!/bin/bash
         
         APPLICATION=${{ inputs.applicationname }}
         REPOURL=${{ inputs.repourl }}
@@ -61,6 +61,8 @@ runs:
         SERVER=${{ inputs.serverurl }}
         NAMESPACE=${{ inputs.destnamespace }}
         PROJECT=${{ inputs.projectname }}
+
+        #json payload for argocd rest api
         
         PAYLOAD=$(cat <<EOF
         {
