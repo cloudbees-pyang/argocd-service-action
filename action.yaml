@@ -1,0 +1,88 @@
+---
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: action
+name: argocd-service-action
+description: An example argocd service action
+inputs:
+  serverurl:
+    description: argocd server url
+    required: true
+    default: 'https://kubernetes.default.svc'
+  username:
+    description: username to authenticate
+    required: true
+  password:
+    description: password to use
+    required: true 
+  projectname:
+    description: project job id
+    required: true
+    default: 'platform-test'
+  applicationname:
+    description: application name
+    required: true
+  repourl:
+    description: repo url
+    required: true
+  targetrevision:
+    description: repo version
+    required: true
+    default: 'HEAD'
+  repopath:
+    description: path within the Git repository git only
+    required: false
+    default: '.'
+  destnamespace:
+    description: destination namespace
+    required: true
+    default: 'platform-test'
+  
+runs:
+  using: composite
+  steps:
+    - id: login
+      name: login to argocd
+      uses: docker://poseidon1979/curl-jq:1.0
+      run: | 
+        SESSION_TOKEN=$(curl -d "{\"username\": \"${{ inputs.user }}\", \"password\": \"${{ inputs.password }}\"}" -H "Content-Type: application/json" "http://34.110.153.253/api/v1/session" | jq -r .token)           
+        echo $SESSION_TOKEN >> .token
+      
+    - id: create-app
+      name: create application
+      uses: docker://poseidon1979/curl-jq:1.0
+      run: |
+
+        #json payload for argocd rest api
+        PAYLOAD=$(cat <<EOF
+        {
+          "metadata": {
+            "name": "${{ inputs.applicationname }}"
+          
+          },
+          "spec": {
+            "source": {
+              "repoURL": "${{ inputs.repourl }}",
+              "path": "${{ inputs.repopath }}",
+              "targetRevision": "${{ inputs.targetrevision }}"
+            },
+            "destination": {
+              "server": "${{ inputs.serverurl }}",
+              "namespace": "${{ inputs.destnamespace }}"
+            },
+            "project": "${{ inputs.destnamespace }}"
+          }
+        }
+        EOF
+        )
+
+          # Create the ArgoCD application
+          SESSION_TOKEN=$(cat ./token)
+          response=$(curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "$ARGOCD_SERVER/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN")
+          #cat response.txt |jq .metadata.managedFields[0].operation
+          cat response.txt
+          if [[ $response -eq 200 ]]; then
+            echo "complete"
+            
+          else
+            echo "Error: Unexpected HTTP status code $response."
+          fi
