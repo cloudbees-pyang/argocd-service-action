@@ -65,29 +65,29 @@ runs:
         #json payload for argocd rest api
         
         
-        export  PAYLOAD='{
-          "metadata": {
-            "name": "$APPLICATION",
-            "namespace": "argocd"
+        export  PAYLOAD="{
+          \"metadata\": {
+            \"name\": \"$APPLICATION\",
+            \"namespace\": \"argocd\"
           },
-          "spec": {
-            "source": {
-              "repoURL": "$REPOURL",
-              "path": "$PATH",
-              "targetRevision": "$REVISION"
+          \"spec\": {
+            \"source\": {
+              \"repoURL\": \"$REPOURL\",
+              \"path\": \"$PATH\",
+              \"targetRevision\": \"$REVISION\"
             },
-            "destination": {
-              "server": "$SERVER",
-              "namespace": "$NAMESPACE"
+            \"destination\": {
+              \"server\": \"$SERVER\",
+              \"namespace\": \"$NAMESPACE\"
             },
-            "project": "$PROJECT"
+            \"project\": \"$PROJECT\"
           }
-        }' 
+        }" 
         
         
           echo $PAYLOAD
           # Create the ArgoCD application
-          SESSION_TOKEN=$(cat .token)
+          SESSION_TOKEN=$(<.token)
           echo $SESSION_TOKEN
           
           response=$(curl -s -o response.txt -w "%{response_code}" -k -L -X POST -H "Content-Type: application/json" --data "$PAYLOAD" "${{ inputs.serverurl }}/api/v1/applications" --cookie "argocd.token=$SESSION_TOKEN")
